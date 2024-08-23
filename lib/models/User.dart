@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-class User {
+class Users {
   String? fullName ;
   String? email;
   String? mobileNo;
@@ -9,7 +9,7 @@ class User {
   String? emergencyNo;
 
   // Constructor
-  User({
+  Users({
     required this.fullName,
     required this.email,
     required this.mobileNo,
@@ -18,7 +18,7 @@ class User {
     required this.emergencyNo,
   });
 
-  User.fromJson(Map<String, dynamic> json) {
+  Users.fromJson(Map<String, dynamic> json) {
     fullName = json['fullName']?? "" ;
     email = json['email']?? "";
     mobileNo = json['mobileNo']??"";

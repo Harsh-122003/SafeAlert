@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class Utils{
 
@@ -54,6 +55,32 @@ class Utils{
         },
         transitionDuration: const Duration(milliseconds: 500), // Adjust duration as needed
       ),
+    );
+  }
+
+  static void showdialog({required BuildContext context ,required String msg}){
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dismissal when tapping outside the dialog
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.yellow.shade700),
+              ),
+              const SizedBox(height: 20),
+               Text(
+                msg,
+                style:const TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

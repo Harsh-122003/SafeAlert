@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:safe_alert/Utils.dart';
+import 'package:safe_alert/models/User.dart';
 
 class Services {
   static final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -38,8 +39,17 @@ class Services {
         await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
         return true;
       }on FirebaseAuthException catch(e){
-        print("error : ${e.toString()}");
-        Utils.showSnackbar(context: context, msg: e.toString());
+
+        if(e.code=="user-not-found"){
+          Utils.showSnackbar(context: context, msg: "User not found");
+        }else if(e.code=="wrong-password"){
+          Utils.showSnackbar(context: context, msg: "Wrong Password");
+        }else{
+          print("error : ${e.toString()}");
+          Utils.showSnackbar(context: context, msg: e.toString());
+        }
+
+
         return false;
       }
   }
@@ -48,4 +58,48 @@ class Services {
     await firebaseAuth.signOut();
     return true;
   }
+
+  static Future<Users> getUserInfo() async {
+
+    String uid = firebaseAuth.currentUser!.uid;
+
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+          await fireStore.collection("Users").doc(uid).get();
+
+    if (documentSnapshot.exists) {
+      Users user = Users.fromJson(documentSnapshot.data()!);
+      return user;
+    } else {
+      throw Exception("User not found");
+    }
+  }
+
+  static Future<void> updateUserInfo({required String name ,required String address , required String phone , required String emergency}) async {
+
+    String uid = firebaseAuth.currentUser!.uid;
+    await fireStore.collection("Users").doc(uid).update({
+      "fullName" : name,
+      "address" : address,
+      "mobileNo" : phone,
+      "emergencyNo" : emergency,
+    });
+
+  }
+
+  static Future<void> addPostToFirebase({required String title , required String body , required String image,required String date}) async {
+
+    await fireStore.collection("Forum").add({
+      "title" : title,
+      "body" : body,
+      "image" : image,
+      "date" : date,
+    });
+
+  }
+
+  static Future<QuerySnapshot<Map<String, dynamic>>> getAllPosts() async {
+    return await fireStore.collection("Forum").get();
+  }
+
+
 }

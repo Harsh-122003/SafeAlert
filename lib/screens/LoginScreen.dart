@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:safe_alert/Services.dart';
+import 'package:safe_alert/screens/ForgotPasswordScreen.dart';
 import 'package:safe_alert/screens/HomeScreen.dart';
 import 'package:safe_alert/screens/SignInScreen.dart';
 
@@ -92,7 +93,11 @@ class _LoginscreenState extends State<Loginscreen> {
                     ),
                   ),
                   const SizedBox(height: 20,),
-                  Text("Forgot password?",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18,color: Colors.yellow.shade700),textAlign: TextAlign.end,),
+                  InkWell(
+                    onTap: (){
+                      Utils.navigateWithSlideTransitionWithPush(context: context, screen: const ForgotPass(), begin: const Offset(0.0, 1.0), end: Offset.zero);
+                    },
+                      child: Text("Forgot password?",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18,color: Colors.yellow.shade700),textAlign: TextAlign.end,)),
                   const SizedBox(height: 20,),
                   SizedBox(
                     width: MediaQuery.of(context).size.width,

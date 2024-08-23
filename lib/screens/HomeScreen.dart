@@ -6,8 +6,10 @@ import 'package:safe_alert/screens/ForumScreen.dart';
 import 'package:safe_alert/screens/LoginScreen.dart';
 import 'package:safe_alert/screens/ProfileScreen.dart';
 import 'package:safe_alert/screens/ReportingScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/GridItem.dart';
+import '../models/User.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -35,8 +37,35 @@ class _HomescreenState extends State<Homescreen> {
         title: 'Profile',
         subText: 'Manage Your Profile here'),
   ];
+  late Users user;
+
 
   final List<Widget> list = [ const Emergencyscreen(), const Reportingscreen(),const Forumscreen(),const Profilescreen()];
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getUserInfo();
+  }
+
+  Future<void> _getUserInfo() async {
+    try {
+      user = await Services.getUserInfo();
+      if (user != null) {
+         SharedPreferences sdf = await SharedPreferences.getInstance();
+         sdf.setString("name", user.fullName!);
+         sdf.setString("address", user.address!);
+         sdf.setString("phone", user.mobileNo!);
+         sdf.setString("emergency", user.emergencyNo!);
+         sdf.setString("email", user.email!);
+      }
+    } catch (e) {
+      print("Error fetching user info: $e");
+
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +77,7 @@ class _HomescreenState extends State<Homescreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height: 10,),
               Row(
                 children: [
                   Image.asset("images/sos_logo2.png",width: 80,height: 80,),
